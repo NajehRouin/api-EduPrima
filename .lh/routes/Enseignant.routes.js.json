@@ -1,0 +1,26 @@
+{
+    "sourceFile": "routes/Enseignant.routes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1748456779771,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1748459481083,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,5 +17,6 @@\n   \"/getEnseignantsiedBar\",\r\n   authEleve,\r\n   EnseignantCtrl.getEnseignantSeidBar\r\n );\r\n+router.put(\"/updateEnseignant\", EnseignantCtrl.updateEnseignant);\r\n module.exports = router;\r\n"
+                },
+                {
+                    "date": 1748469354212,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,5 +18,6 @@\n   authEleve,\r\n   EnseignantCtrl.getEnseignantSeidBar\r\n );\r\n router.put(\"/updateEnseignant\", EnseignantCtrl.updateEnseignant);\r\n+router.delete('/deleteEnseignant',EnseignantCtrl.deleteEnseignant)\r\n module.exports = router;\r\n"
+                }
+            ],
+            "date": 1748456779771,
+            "name": "Commit-0",
+            "content": "const router = require(\"express\").Router();\r\n\r\nconst EnseignantCtrl = require(\"../controllers/EnseignantCtrl\");\r\nconst { authAdmin, authEnseignant, authEleve } = require(\"../middleware/auth\");\r\n\r\nrouter.post(\"/enseignant\", authAdmin, EnseignantCtrl.AjouterEnseignant);\r\nrouter.post(\"/Allenseignant\", authAdmin, EnseignantCtrl.getAllEnseignant);\r\nrouter.post(\"/loginEns\", EnseignantCtrl.login);\r\nrouter.post('/getEnseignantById',EnseignantCtrl.getEnseignantById)\r\nrouter.get(\r\n  \"/currentEnseignant\",\r\n  authEnseignant,\r\n  EnseignantCtrl.currentEnseignant\r\n);\r\n\r\nrouter.get(\r\n  \"/getEnseignantsiedBar\",\r\n  authEleve,\r\n  EnseignantCtrl.getEnseignantSeidBar\r\n);\r\nmodule.exports = router;\r\n"
+        }
+    ]
+}

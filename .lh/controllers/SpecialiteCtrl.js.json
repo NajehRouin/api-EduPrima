@@ -1,0 +1,26 @@
+{
+    "sourceFile": "controllers/SpecialiteCtrl.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1748454192458,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1748454366994,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,21 +44,22 @@\n   modifierSpecialite: async (req, res) => {\r\n     try {\r\n       let { label, idSpecialite } = req.body;\r\n       let findSpecialite = await specialite.findById({ _id: idSpecialite });\r\n-      let findEnseignant = await EnseignantModel.updateMany(\r\n-        { specialite: findSpecialite.label },\r\n-        { specialite: label }\r\n-      );\r\n+  // Update EnseignantModel documents\r\n+    const findEnseignant = await EnseignantModel.updateMany(\r\n+      { specialite: findSpecialite.label },\r\n+      { specialite: label }\r\n+    );\r\n       await specialite.findByIdAndUpdate(\r\n         { _id: idSpecialite },\r\n         { label: label }\r\n       );\r\n \r\n       res\r\n         .status(200)\r\n         .json({\r\n-          msg: \"specialite modifier avec succés\",\r\n+          msg: \"specialite modifier avec sucées\",\r\n           success: true,\r\n           error: false,\r\n         });\r\n     } catch (error) {\r\n"
+                },
+                {
+                    "date": 1748454866360,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,8 +49,9 @@\n       const findEnseignant = await EnseignantModel.updateMany(\r\n         { specialite: findSpecialite.label },\r\n         { specialite: label }\r\n       );\r\n+      console.log(\"first\",findEnseignant)\r\n       await specialite.findByIdAndUpdate(\r\n         { _id: idSpecialite },\r\n         { label: label }\r\n       );\r\n"
+                }
+            ],
+            "date": 1748454192458,
+            "name": "Commit-0",
+            "content": "const EnseignantModel = require(\"../models/EnseignantModel\");\r\nlet specialite = require(\"../models/SpecilateModel\");\r\n\r\nlet specialiteCtrl = {\r\n  getAllSpecialite: async (req, res) => {\r\n    try {\r\n      let findSpecialite = await specialite.find();\r\n\r\n      res\r\n        .status(200)\r\n        .json({ result: findSpecialite, success: true, error: false });\r\n    } catch (error) {\r\n      return res\r\n        .status(500)\r\n        .json({ msg: error.message || error, success: false, error: true });\r\n    }\r\n  },\r\n\r\n  AjouterSpecilate: async (req, res) => {\r\n    try {\r\n      let { label } = req.body;\r\n\r\n      let findSpecialite = await specialite.findOne({ label });\r\n\r\n      if (findSpecialite)\r\n        return res.status(400).json({ msg: \"Specialite déja existe\" });\r\n\r\n      let newSpecilate = new specialite({ label });\r\n      await newSpecilate.save();\r\n\r\n      res.status(200).json({\r\n        msg: \"Specilate créer avec sucées \",\r\n        result: newSpecilate,\r\n        success: true,\r\n        error: false,\r\n      });\r\n    } catch (error) {\r\n      return res\r\n        .status(500)\r\n        .json({ msg: error.message, success: false, error: true });\r\n    }\r\n  },\r\n\r\n  modifierSpecialite:async(req,res)=>{\r\n    try {\r\n      let { label,idSpecialite } = req.body;\r\n      let findSpecialite=await specialite.findById({_id:idSpecialite})\r\n      let findEnseignant=await EnseignantModel.updateMany({specialite:findSpecialite.label},{specialite:label})\r\n      await specialite.findByIdAndUpdate({_id:idSpecialite},{label:label})\r\n\r\n      res.status(200).json({msg:\"specialite modifier avec succés\", success: true,\r\n        error: false,})\r\n    } catch (error) {\r\n       return res\r\n        .status(500)\r\n        .json({ msg: error.message, success: false, error: true });\r\n    }\r\n  }\r\n};\r\n\r\nmodule.exports = specialiteCtrl;\r\n"
+        }
+    ]
+}

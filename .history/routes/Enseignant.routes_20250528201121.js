@@ -19,5 +19,4 @@ router.get(
   EnseignantCtrl.getEnseignantSeidBar
 );
 router.put("/updateEnseignant", EnseignantCtrl.updateEnseignant);
-router.delete("/deleteEnseignant", EnseignantCtrl.deleteEnseignant);
 module.exports = router;

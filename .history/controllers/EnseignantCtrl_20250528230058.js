@@ -15,7 +15,7 @@ const EnseignantCtrl = {
         "classes"
       );
       if (!findEnseignant)
-        return res.status(400).json({ message: "email incorrect" });
+        return res.status(400).json({ msg: "email incorrect" });
 
       let compare = await bcrypt.compare(motDePasse, findEnseignant.motDePasse);
       if (!compare)
@@ -256,7 +256,7 @@ const EnseignantCtrl = {
       for (const cour of cours) {
         // Delete resources
         if (cour.resource) {
-          await resourceModel.findByIdAndDelete(cour.resource);
+          // await resourceModel.findByIdAndDelete(cour.resource);
         }
 
         // Delete submissions and activities
@@ -264,31 +264,32 @@ const EnseignantCtrl = {
           // Iterate through each activity
           for (const activiteId of cour.activites) {
             // Delete all submissions linked to this activity
-            await SoumissionModel.deleteMany({ Activite: activiteId });
+
+            //await SoumissionModel.deleteMany({ Activite: activiteId });
+            const findSoumission = await SoumissionModel.find({
+              Activite: activiteId,
+            });
+            console.log("findSoumission", findSoumission);
           }
           // Delete all activities
-          await activiteModel.deleteMany({ _id: { $in: cour.activites } });
+          // await activiteModel.deleteMany({ _id: { $in: cour.activites } });
         }
 
         // Delete the course itself
-        await CoursModel.findByIdAndDelete(cour._id);
+        // await CoursModel.findByIdAndDelete(cour._id);
       }
 
-      // Delete the Enseignant
-      await Enseignant.findByIdAndDelete(idEnseignant);
+      // Delete the teacher
+      //await Enseignant.findByIdAndDelete(idEnseignant);
       res.json({
-        success: true,
-        error: false,
         message:
           "Enseignant et toutes les données associées supprimées avec succès.",
       });
     } catch (error) {
       console.error("Erreur lors de la suppression de l'Enseignant :", error);
       res.status(500).json({
-        message:
+        error:
           "Une erreur est survenue lors de la suppression de l'Enseignant.",
-        success: false,
-        error: true,
       });
     }
   },

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "middleware/upload.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1748285298892,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1748285298892,
+            "name": "Commit-0",
+            "content": "const multer = require(\"multer\");\r\nconst path = require(\"path\");\r\nconst fs = require(\"fs\");\r\n\r\n// Define the destination folder\r\nconst destinationFolder = \"resource/\";\r\n\r\n// Ensure the destination folder exists\r\nif (!fs.existsSync(destinationFolder)) {\r\n  fs.mkdirSync(destinationFolder, { recursive: true });\r\n}\r\n\r\nconst storage = multer.diskStorage({\r\n  destination: (req, file, cb) => {\r\n    cb(null, destinationFolder);\r\n  },\r\n  filename: (req, file, cb) => {\r\n    const uniqueSuffix = Date.now() + \"-\" + Math.round(Math.random() * 1e9);\r\n    cb(null, uniqueSuffix + path.extname(file.originalname));\r\n  },\r\n});\r\n\r\nconst upload = multer({ storage });\r\n\r\nmodule.exports = upload;"
+        }
+    ]
+}

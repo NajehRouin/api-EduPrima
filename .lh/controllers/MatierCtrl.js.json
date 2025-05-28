@@ -1,0 +1,26 @@
+{
+    "sourceFile": "controllers/MatierCtrl.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1748286929204,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1748287134326,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,7 +11,33 @@\n         .status(500)\r\n         .json({ msg: error.message || error, success: false, error: true });\r\n     }\r\n   },\r\n+\r\n+  AjouterMatier:async(req,res)=>{\r\n+    try {\r\n+        let {label}=req.body\r\n+\r\n+        let findMatier=await Matier.findOne({label})\r\n+\r\n+        if(findMatier) return res.status(400).json({ msg: \"Matier déja existe\" });\r\n+\r\n+        let newMatier=new Matier({label})\r\n+        await newMatier.save()\r\n+\r\n+        \r\n+      res.status(200).json({\r\n+        msg: \"Matier créer avec sucées \",\r\n+        result: newMatier,\r\n+        success: true,\r\n+        error: false,\r\n+      });\r\n+        \r\n+    } catch (error) {\r\n+          return res\r\n+        .status(500)\r\n+        .json({ msg: error.message, success: false, error: true });\r\n+    }\r\n+  }\r\n };\r\n \r\n module.exports = matierCtrl;\r\n"
+                },
+                {
+                    "date": 1748287413223,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,34 +1,34 @@\n-let Matier = require(\"../models/MatierModel\");\r\n+let specialite = require(\"../models/SpecilateModel\");\r\n \r\n-let matierCtrl = {\r\n-  getAllMatier: async (req, res) => {\r\n+let specialiteCtrl = {\r\n+  getAllSpecialite: async (req, res) => {\r\n     try {\r\n-      let findMatier = await Matier.find();\r\n+      let findSpecialite = await specialite.find();\r\n \r\n-      res.status(200).json({ result: findMatier, success: true, error: false });\r\n+      res.status(200).json({ result: findSpecialite, success: true, error: false });\r\n     } catch (error) {\r\n       return res\r\n         .status(500)\r\n         .json({ msg: error.message || error, success: false, error: true });\r\n     }\r\n   },\r\n \r\n-  AjouterMatier: async (req, res) => {\r\n+  AjouterSpecilate: async (req, res) => {\r\n     try {\r\n       let { label } = req.body;\r\n \r\n-      let findMatier = await Matier.findOne({ label });\r\n+      let findSpecialite = await specialite.findOne({ label });\r\n \r\n-      if (findMatier)\r\n-        return res.status(400).json({ msg: \"Matier déja existe\" });\r\n+      if (findSpecialite)\r\n+        return res.status(400).json({ msg: \"Specialite déja existe\" });\r\n \r\n-      let newMatier = new Matier({ label });\r\n-      await newMatier.save();\r\n+      let newSpecilate = new specialite({ label });\r\n+      await newSpecilate.save();\r\n \r\n       res.status(200).json({\r\n-        msg: \"Matier créer avec sucées \",\r\n-        result: newMatier,\r\n+        msg: \"Specilate créer avec sucées \",\r\n+        result: newSpecilate,\r\n         success: true,\r\n         error: false,\r\n       });\r\n     } catch (error) {\r\n@@ -36,7 +36,9 @@\n         .status(500)\r\n         .json({ msg: error.message, success: false, error: true });\r\n     }\r\n   },\r\n+\r\n+\r\n };\r\n \r\n-module.exports = matierCtrl;\r\n+module.exports = specialiteCtrl;\r\n"
+                }
+            ],
+            "date": 1748286929204,
+            "name": "Commit-0",
+            "content": "let Matier=require('../models/MatierModel')\r\n\r\nlet matierCtrl={\r\n\r\n    getAllMatier:async(req,res)=>{\r\n        try {\r\n            let findMatier=await Matier.find()\r\n\r\n              res\r\n        .status(200)\r\n        .json({ result: findMatier, success: true, error: false });\r\n            \r\n        } catch (error) {\r\n             return res\r\n        .status(500)\r\n        .json({ msg: error.message || error, success: false, error: true });\r\n        }\r\n    }\r\n\r\n}\r\n\r\nmodule.exports=matierCtrl"
+        }
+    ]
+}

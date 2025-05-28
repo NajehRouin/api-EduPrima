@@ -6,7 +6,7 @@ const { authAdmin, authEnseignant, authEleve } = require("../middleware/auth");
 router.post("/enseignant", authAdmin, EnseignantCtrl.AjouterEnseignant);
 router.post("/Allenseignant", authAdmin, EnseignantCtrl.getAllEnseignant);
 router.post("/loginEns", EnseignantCtrl.login);
-router.post("/getEnseignantById", EnseignantCtrl.getEnseignantById);
+
 router.get(
   "/currentEnseignant",
   authEnseignant,
@@ -18,6 +18,4 @@ router.get(
   authEleve,
   EnseignantCtrl.getEnseignantSeidBar
 );
-router.put("/updateEnseignant", EnseignantCtrl.updateEnseignant);
-router.delete("/deleteEnseignant", EnseignantCtrl.deleteEnseignant);
 module.exports = router;

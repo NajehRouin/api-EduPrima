@@ -1,0 +1,18 @@
+{
+    "sourceFile": "models/SpecilateModel.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1748287256824,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1748287256824,
+            "name": "Commit-0",
+            "content": "let mongoose = require(\"mongoose\");\r\n\r\nlet SpecialteSchema = new mongoose.Schema({\r\n  label: {\r\n    type: String,\r\n    required: true,\r\n  },\r\n});\r\n\r\nmodule.exports = mongoose.model(\"specialite\", SpecialteSchema);\r\n"
+        }
+    ]
+}

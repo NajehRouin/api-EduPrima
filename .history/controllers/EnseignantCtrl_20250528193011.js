@@ -3,10 +3,6 @@ const bcrypt = require("bcrypt");
 let jwt = require("jsonwebtoken");
 const AdminModel = require("../models/AdminModel");
 const EleveModel = require("../models/EleveModel");
-const CoursModel = require("../models/CoursModel");
-const resourceModel = require("../models/resourceModel");
-const activiteModel = require("../models/activiteModel");
-const SoumissionModel = require("../models/SoumissionModel");
 const EnseignantCtrl = {
   login: async (req, res) => {
     try {
@@ -15,7 +11,7 @@ const EnseignantCtrl = {
         "classes"
       );
       if (!findEnseignant)
-        return res.status(400).json({ message: "email incorrect" });
+        return res.status(400).json({ msg: "email incorrect" });
 
       let compare = await bcrypt.compare(motDePasse, findEnseignant.motDePasse);
       if (!compare)
@@ -166,11 +162,9 @@ const EnseignantCtrl = {
 
       let findEnseignant = await Enseignant.findById({
         _id: idEnseignant,
-      })
-        .select("-motDePasse -role")
-        .populate("classes");
+      });
 
-      res.status(200).json({
+      res.status({
         result: findEnseignant,
         success: true,
         error: false,
@@ -179,117 +173,6 @@ const EnseignantCtrl = {
       return res
         .status(500)
         .json({ msg: error.message, success: false, error: true });
-    }
-  },
-
-  updateEnseignant: async (req, res) => {
-    try {
-      const { idEnseignant, nom, email, motDePasse, specialite, classes } =
-        req.body;
-
-      // Validate required fields
-      if (
-        !idEnseignant ||
-        !nom ||
-        !email ||
-        !specialite ||
-        !classes ||
-        !Array.isArray(classes)
-      ) {
-        return res.status(400).json({
-          msg: "Tous les champs obligatoires (idEnseignant, nom, email, specialite, classes) doivent être fournis",
-          success: false,
-          error: true,
-        });
-      }
-
-      // Prepare update data
-      const updateData = {
-        nom,
-        email,
-        specialite,
-        classes,
-      };
-
-      // Only update password if provided
-      if (motDePasse) {
-        const salt = await bcrypt.genSalt(10);
-        updateData.motDePasse = await bcrypt.hash(motDePasse, salt);
-      }
-
-      // Update the teacher
-      const updatedEnseignant = await Enseignant.findByIdAndUpdate(
-        idEnseignant,
-        { $set: updateData },
-        { new: true, runValidators: true }
-      ).populate("classes");
-
-      if (!updatedEnseignant) {
-        return res.status(404).json({
-          msg: "Enseignant non trouvé",
-          success: false,
-          error: true,
-        });
-      }
-
-      res.json({
-        result: updatedEnseignant,
-        success: true,
-        error: false,
-      });
-    } catch (error) {
-      res.status(500).json({
-        msg: error.message,
-        success: false,
-        error: true,
-      });
-    }
-  },
-
-  deleteEnseignant: async (req, res) => {
-    try {
-      let { idEnseignant } = req.body;
-      // Find all courses for the teacher
-      const cours = await CoursModel.find({ enseignantId: idEnseignant });
-
-      // Iterate through each course
-      for (const cour of cours) {
-        // Delete resources
-        if (cour.resource) {
-          await resourceModel.findByIdAndDelete(cour.resource);
-        }
-
-        // Delete submissions and activities
-        if (cour.activites && cour.activites.length > 0) {
-          // Iterate through each activity
-          for (const activiteId of cour.activites) {
-            // Delete all submissions linked to this activity
-            await SoumissionModel.deleteMany({ Activite: activiteId });
-          }
-          // Delete all activities
-          await activiteModel.deleteMany({ _id: { $in: cour.activites } });
-        }
-
-        // Delete the course itself
-        await CoursModel.findByIdAndDelete(cour._id);
-      }
-
-      // Delete the Enseignant
-      await Enseignant.findByIdAndDelete(idEnseignant);
-      res.json({
-        success: true,
-        error: false,
-        message:
-          "Enseignant et toutes les données associées supprimées avec succès.",
-      });
-    } catch (error) {
-      console.error("Erreur lors de la suppression de l'Enseignant :", error);
-      res.status(500).json({
-        message:
-          "Une erreur est survenue lors de la suppression de l'Enseignant.",
-        success: false,
-        error: true,
-      });
     }
   },
 };

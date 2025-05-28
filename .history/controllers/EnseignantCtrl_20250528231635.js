@@ -15,7 +15,7 @@ const EnseignantCtrl = {
         "classes"
       );
       if (!findEnseignant)
-        return res.status(400).json({ message: "email incorrect" });
+        return res.status(400).json({ msg: "email incorrect" });
 
       let compare = await bcrypt.compare(motDePasse, findEnseignant.motDePasse);
       if (!compare)

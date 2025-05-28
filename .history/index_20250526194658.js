@@ -131,7 +131,6 @@ const AdminRoutes = require("./routes/Admin.Routes");
 const NotificationRouter = require("./routes/Notification.routes");
 const updateActivitesEtat = require("./config/cron");
 const messageRouter = require("./routes/message.routes");
-const specialiteRouter = require("./routes/Specialite.routes");
 app.use("/api", [
   AdminRoutes,
   EnseignantRouter,
@@ -142,7 +141,6 @@ app.use("/api", [
   SoumissionRoutes,
   NotificationRouter,
   messageRouter,
-  specialiteRouter,
 ]);
 
 //create admin if not exist

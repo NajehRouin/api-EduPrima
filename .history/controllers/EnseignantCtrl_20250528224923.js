@@ -6,7 +6,6 @@ const EleveModel = require("../models/EleveModel");
 const CoursModel = require("../models/CoursModel");
 const resourceModel = require("../models/resourceModel");
 const activiteModel = require("../models/activiteModel");
-const SoumissionModel = require("../models/SoumissionModel");
 const EnseignantCtrl = {
   login: async (req, res) => {
     try {
@@ -15,7 +14,7 @@ const EnseignantCtrl = {
         "classes"
       );
       if (!findEnseignant)
-        return res.status(400).json({ message: "email incorrect" });
+        return res.status(400).json({ msg: "email incorrect" });
 
       let compare = await bcrypt.compare(motDePasse, findEnseignant.motDePasse);
       if (!compare)
@@ -249,46 +248,34 @@ const EnseignantCtrl = {
   deleteEnseignant: async (req, res) => {
     try {
       let { idEnseignant } = req.body;
-      // Find all courses for the teacher
+      // // Trouver les cours de la classe
       const cours = await CoursModel.find({ enseignantId: idEnseignant });
-
-      // Iterate through each course
+      // // Supprimer les ressources et les activités liées à chaque cours
       for (const cour of cours) {
-        // Delete resources
+        // Supprimer les ressources
         if (cour.resource) {
           await resourceModel.findByIdAndDelete(cour.resource);
         }
 
-        // Delete submissions and activities
+        //   // Supprimer les activités
         if (cour.activites && cour.activites.length > 0) {
-          // Iterate through each activity
-          for (const activiteId of cour.activites) {
-            // Delete all submissions linked to this activity
-            await SoumissionModel.deleteMany({ Activite: activiteId });
-          }
-          // Delete all activities
           await activiteModel.deleteMany({ _id: { $in: cour.activites } });
         }
 
-        // Delete the course itself
+        //   // Supprimer le cours lui-même
         await CoursModel.findByIdAndDelete(cour._id);
       }
-
-      // Delete the Enseignant
+      // Supprimer la Enseignant
       await Enseignant.findByIdAndDelete(idEnseignant);
       res.json({
-        success: true,
-        error: false,
         message:
           "Enseignant et toutes les données associées supprimées avec succès.",
       });
     } catch (error) {
-      console.error("Erreur lors de la suppression de l'Enseignant :", error);
+      console.error("Erreur lors de la suppression de la Enseignant :", error);
       res.status(500).json({
-        message:
-          "Une erreur est survenue lors de la suppression de l'Enseignant.",
-        success: false,
-        error: true,
+        error:
+          "Une erreur est survenue lors de la suppression de la Enseignant.",
       });
     }
   },

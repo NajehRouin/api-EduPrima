@@ -15,7 +15,7 @@ const EnseignantCtrl = {
         "classes"
       );
       if (!findEnseignant)
-        return res.status(400).json({ message: "email incorrect" });
+        return res.status(400).json({ msg: "email incorrect" });
 
       let compare = await bcrypt.compare(motDePasse, findEnseignant.motDePasse);
       if (!compare)
@@ -274,21 +274,17 @@ const EnseignantCtrl = {
         await CoursModel.findByIdAndDelete(cour._id);
       }
 
-      // Delete the Enseignant
+      // Delete the teacher
       await Enseignant.findByIdAndDelete(idEnseignant);
       res.json({
-        success: true,
-        error: false,
         message:
           "Enseignant et toutes les données associées supprimées avec succès.",
       });
     } catch (error) {
       console.error("Erreur lors de la suppression de l'Enseignant :", error);
       res.status(500).json({
-        message:
+        error:
           "Une erreur est survenue lors de la suppression de l'Enseignant.",
-        success: false,
-        error: true,
       });
     }
   },

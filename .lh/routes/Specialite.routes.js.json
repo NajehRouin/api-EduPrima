@@ -1,0 +1,22 @@
+{
+    "sourceFile": "routes/Specialite.routes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1748287570377,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1748454416904,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,6 +3,7 @@\n \r\n router.get(\"/specialite\", specialiteCtrl.getAllSpecialite);\r\n \r\n router.post(\"/specialite\", specialiteCtrl.AjouterSpecilate);\r\n+router.post('/modifierSpecilaite',specialiteCtrl.modifierSpecialite)\r\n \r\n module.exports = router;\r\n"
+                }
+            ],
+            "date": 1748287570377,
+            "name": "Commit-0",
+            "content": "let router=require('express').Router()\r\nlet specialiteCtrl=require('../controllers/SpecialiteCtrl')\r\n\r\n\r\nrouter.get('/specialite',specialiteCtrl.getAllSpecialite)\r\n\r\nrouter.post('/specialite',specialiteCtrl.AjouterSpecilate)\r\n\r\n\r\nmodule.exports=router"
+        }
+    ]
+}

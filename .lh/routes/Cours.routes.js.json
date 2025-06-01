@@ -1,0 +1,26 @@
+{
+    "sourceFile": "routes/Cours.routes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1748799107070,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1748799113261,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -70,9 +70,9 @@\n );\r\n \r\n router.post(\"/getactivites\", CoursCtrl.getActivitesbyCours);\r\n \r\n-router.post(\"/getCourBYid\", CoursCtrl.getCoursById);\r\n+router.post(\"/getCourById\", CoursCtrl.getCoursById);\r\n \r\n router.post(\"/coursByEleve\", auth.authEleve, CoursCtrl.listOfCoursByEleve);\r\n \r\n module.exports = router;\r\n"
+                },
+                {
+                    "date": 1748799649484,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,5 +74,7 @@\n router.post(\"/getCourById\", CoursCtrl.getCoursById);\r\n \r\n router.post(\"/coursByEleve\", auth.authEleve, CoursCtrl.listOfCoursByEleve);\r\n \r\n+router.delete('/deleteCour',CoursCtrl.deleteCoursById)\r\n+\r\n module.exports = router;\r\n"
+                }
+            ],
+            "date": 1748799107070,
+            "name": "Commit-0",
+            "content": "const router = require(\"express\").Router();\r\n\r\nlet CoursCtrl = require(\"../controllers/CoursCtrl\");\r\nlet auth = require(\"../middleware/auth\");\r\n\r\nconst upload = require(\"../middleware/upload\");\r\n\r\nconst Resource = require(\"../models/resourceModel\");\r\nconst Cours = require(\"../models/CoursModel\");\r\n\r\n//router.post(\"/cours\", auth.authEnseignant, CoursCtrl.createCours);\r\n//create cours et Resource\r\n\r\nrouter.post(\r\n  \"/cours\",\r\n  auth.authEnseignant,\r\n  upload.single(\"fichier\"),\r\n  async (req, res) => {\r\n    try {\r\n      const { titre, description, classeId } = req.body;\r\n\r\n      const fichier = req.file;\r\n\r\n      if (!fichier) {\r\n        return res.status(400).json({ msg: \"Aucun fichier n'a été envoyé.\" });\r\n      }\r\n\r\n      // Étape 1 : Créer la ressource avec le chemin local\r\n      const resource = new Resource({\r\n        nomFichier: fichier.filename,\r\n\r\n        lienUrl: `http://localhost:${process?.env?.PORT}/resource/${fichier?.filename}`,\r\n      });\r\n\r\n      const savedResource = await resource.save();\r\n\r\n      // Étape 2 : Créer le cours\r\n      const cours = new Cours({\r\n        enseignantId: req.enseignant,\r\n        titre,\r\n        description,\r\n        dateCreation: new Date(),\r\n        classe: classeId,\r\n        resource: savedResource._id,\r\n      });\r\n\r\n      const savedCours = await cours.save();\r\n\r\n      res.status(201).json({\r\n        message: \"Cours et ressource créés avec succès\",\r\n        cours: savedCours,\r\n        success: true,\r\n        error: false,\r\n      });\r\n    } catch (err) {\r\n      console.error(err);\r\n      res.status(500).json({\r\n        msg: error.message,\r\n        success: false,\r\n        error: true,\r\n      });\r\n    }\r\n  }\r\n);\r\n\r\nrouter.post(\r\n  \"/coursbyEnseignant\",\r\n  auth.authEnseignant,\r\n  CoursCtrl.getCoursEnseignant\r\n);\r\n\r\nrouter.post(\"/getactivites\", CoursCtrl.getActivitesbyCours);\r\n\r\nrouter.post(\"/getCourBYid\", CoursCtrl.getCoursById);\r\n\r\nrouter.post(\"/coursByEleve\", auth.authEleve, CoursCtrl.listOfCoursByEleve);\r\n\r\nmodule.exports = router;\r\n"
+        }
+    ]
+}

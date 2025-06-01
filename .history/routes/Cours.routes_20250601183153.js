@@ -75,6 +75,4 @@ router.post("/getCourById", CoursCtrl.getCoursById);
 
 router.post("/coursByEleve", auth.authEleve, CoursCtrl.listOfCoursByEleve);
 
-router.delete("/deleteCour", CoursCtrl.deleteCoursById);
-
 module.exports = router;

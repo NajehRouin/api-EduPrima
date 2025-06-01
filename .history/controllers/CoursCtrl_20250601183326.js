@@ -1,8 +1,6 @@
-const activiteModel = require("../models/activiteModel");
 const Cours = require("../models/CoursModel");
 const EleveModel = require("../models/EleveModel");
 const resourceModel = require("../models/resourceModel");
-const SoumissionModel = require("../models/SoumissionModel");
 const { path } = require("../models/utilisateur");
 
 const CoursCtrl = {
@@ -179,52 +177,37 @@ const CoursCtrl = {
     }
   },
 
-  deleteCoursById: async (req, res) => {
+  deleteCours: async (req, res) => {
     try {
       const { idCours } = req.body;
 
-      // Étape 1 : Rechercher le cours avec ses activités et dépôts
-      const findCours = await Cours.findById(idCours).populate({
-        path: "activites",
-        populate: {
-          path: "depot",
-        },
-      });
-
-      if (!findCours) {
-        return res
-          .status(404)
-          .json({ msg: "Cours non trouvé", success: false });
+      // // Trouver les cours de la classe
+      const cours = await Cours.findById({ _id: idCours });
+      if (cours.resource) {
+        await resourceModel.findByIdAndDelete(cours.resource);
       }
+      // // Supprimer les ressources et les activités liées à chaque cours
 
-      if (findCours.resource) {
-        await resourceModel.findByIdAndDelete(findCours.resource);
-      }
+      // Supprimer les ressources
 
-      if (findCours.activites && findCours.activites.length > 0) {
-        for (const activite of findCours.activites) {
-          // Supprimer les dépôts associés à l'activité
-          if (activite.depot && activite.depot.length > 0) {
-            for (const depot of activite.depot) {
-              await SoumissionModel.findByIdAndDelete(depot._id);
-            }
-          }
-          // Supprimer l'activité elle-même
-          await activiteModel.findByIdAndDelete(activite._id);
+      //   // Supprimer les activités
+      if (cours.activites && cours.activites.length > 0) {
+        for (const cour of cours) {
+          await activiteModel.deleteMany({ _id: { $in: cour.activites } });
         }
       }
 
-      // Étape 4 : Supprimer le cours
-      await Cours.findByIdAndDelete(idCours);
-
-      return res.json({
-        msg: "Cours et ses données associées supprimés avec succès",
-        success: true,
+      //   // Supprimer le cours lui-même
+      await Cours.findByIdAndDelete(cours._id);
+      res.json({
+        message:
+          "Cours et toutes les données associées supprimées avec succès.",
       });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ msg: error.message, success: false, error: true });
+      console.error("Erreur lors de la suppression de la classe :", error);
+      res.status(500).json({
+        error: "Une erreur est survenue lors de la suppression de la classe.",
+      });
     }
   },
 };
